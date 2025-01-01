@@ -113,11 +113,9 @@
 
   <section class='users-section' style="text-align:center">
     <style>
-
-        /* Style the table */
         .table {
-            width: 90%; /* Flexible width for small screens */
-            max-width: 600px; /* Limit max size */
+            width: 90%;
+            max-width: 600px;
             border-collapse: collapse;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -149,7 +147,7 @@
         }
         @media screen and (min-width: 1024px){
           .tab{
-            margin-left: 25%;
+            margin-left: 0%;
           }
           table{
             margin: 10px 10px 10px 200px;
@@ -159,7 +157,6 @@
           }
 
         }
-        /* Make the table responsive */
         @media screen and (max-width: 600px) {
             .table {
                 width: 100%;
@@ -173,12 +170,108 @@
               display: none;
             }
 
+
         }
     </style>
+    <style>
+    .upcoming-contests {
+      padding: 20px;
+      margin-left: 150px;
+      font-family: Arial, sans-serif;
+    }
+
+    .upcoming-contests h2 span {
+      color: green;
+    }
+
+    .contest {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .contest-info h3 {
+      margin: 0;
+      color: #333;
+    }
+
+    .timer {
+      color: #555;
+      padding: 0px 10px;
+    }
+
+    .button {
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: darkgreen;
+    }
+
+      </style>
     <table class="tab">
-      <td>
-        Hozrcha yaqinlashib kelayotgan musoboqa yo'q
-      </td>
+        <td>
+          <div class="upcoming-contests">
+          <h4>Yaqinlashib Kelayotgan <span>Olimpiadalar</span></h4>
+          @foreach($boshlanmagan as $row)
+          <div class="contest">
+            <div class="contest-info">
+              <h3><a href="competition/{{$row->uuid}}">{{$row->name}}</h3>
+              <p></p>
+            </div>
+            <div class="timer">
+              <p class="remain" id="remain">
+              <?php
+              $a=explode(" ",$row->start);
+              $hour=explode(":",$a[1]);
+              $mon=explode("-",$a[0]);
+              $b = date("H:i:s");
+              $hour1=explode(":",$b);
+              echo ($hour[0]*3600+$hour[1]*60+$hour[2]) - ($hour1[0]*3600+$hour1[1]*60+$hour1[2]);
+               ?>
+             </p>
+             <script>
+             let time = parseInt(document.getElementById('remain').textContent);
+             const timbek=time;
+            const countdownDiv = document.getElementById('remain');
+
+            // Update the countdown every second
+            const timer = setInterval(() => {
+              if (time <= 0) {
+                clearInterval(timer);
+                countdownDiv.textContent = 'Olimpada Boshlangan';
+                return;
+              }
+
+              // Calculate hours, minutes, and seconds
+              const hours = Math.floor(time / 3600);
+              const remainingSecondsAfterHours = time % 3600;
+              const minutes = Math.floor(remainingSecondsAfterHours / 60);
+              const seconds = remainingSecondsAfterHours % 60;
+
+              // Update the text content
+              countdownDiv.textContent = `${hours}h ${minutes}m ${seconds}s remaining`;
+
+              // Decrement the time
+              time--;
+            }, timbek);
+             </script>
+              <p>4 days 19 hours 55 minutes</p>
+            </div>
+            <a href="competition/{{$row->uuid}}"><button class="button">Ko'rish</button></a>
+          </div>
+          @endforeach
+        </div>
+        </td>
       <td>
         <table class="table">
             <thead class="thead">
@@ -193,20 +286,31 @@
                 @php
                   $rang='red';
                 @endphp
+                <?php $id=1 ?>
+                @foreach ($items as $row)
+                @if($row['status']!="headquarter")
                 <tr class="tr">
-                    <td class="td">1</td>
-                    <td class="td">John Doe</td>
-                    <td class="td">john.doe@example.com</td>
-                    <td class="td" style="color:{{ $rang }}">Pupil</td>
+                    <td class="td">{{ $id }}</td>
+                    <td class="td">{{ $row->name }}</td>
+                    <td class="td"><a href="/profil/{{ $row['username'] }}">{{ $row->username }}</a></td>
+                    <td class="td" style="color:{{ $rang }}">{{ $row->status }}</td>
+                    <?php $id++ ?>
+
                 </tr>
+                @endif
+                @endforeach
             </tbody>
         </table>
+        <style media="screen">
+
+        </style>
+        <a href="/profil" style="margin-left: 40%;border:none;text-decoration:none"   class="btnuser" name="button">Foydalanuvchilar Ro'yhatini Ko'rish</a>
     </td>
   </table>
   <table class="tab1">
     <tr class="tr">
       <td class="td">
-        Hozrcha yaqinlashib kelayotgan musoboqa yo'q
+        
       </td>
     </tr>
     <tr class="tr">
@@ -221,17 +325,26 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                  $rang='red';
-                @endphp
-                <tr class="tr">
-                    <td class="td">1</td>
-                    <td class="td">John Doe</td>
-                    <td class="td">john.doe@example.com</td>
-                    <td class="td" style="color:{{ $rang }}">Pupil</td>
-                </tr>
+              @php
+                $rang='red';
+              @endphp
+              <?php $id=1 ?>
+              @foreach ($items as $row)
+              @if($row['status']!="headquarter")
+              <tr class="tr">
+                  <td class="td">{{ $id }}</td>
+                  <td class="td">{{ $row->name }}</td>
+                  <td class="td"><a href="/profil/{{ $row['username'] }}">{{ $row->username }}</a></td>
+                  <td class="td" style="color:{{ $rang }}">{{ $row->status }}</td>
+                  <?php $id++ ?>
+
+              </tr>
+              @endif
+              @endforeach
             </tbody>
         </table>
+        <a href="/profil" style="border:none;text-decoration:none"   class="btnuser" name="button">Foydalanuvchilar Ro'yhatini Ko'rish</a>
+
     </td>
   </tr>
 </table>

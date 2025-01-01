@@ -3,8 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
+//$uuid = Str::uuid();
 
-class CreateDataTable extends Migration
+class CreateJudgersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +15,15 @@ class CreateDataTable extends Migration
      */
     public function up()
     {
-        Schema::create('data', function (Blueprint $table) {
+        Schema::create('judgers', function (Blueprint $table) {
             $table->id();
-            $table->string('username');
+            $table->string('masala');
+            $table->string('uuid');
             $table->string('name');
-            $table->string('image');
-            $table->string('password');
-            $table->string('status');
-            $table->string('email');
-            $table->string('number');
-            $table->string('rate');
+            $table->string('short');
+            $table->date('start');
+            $table->date('end');
             $table->timestamps();
-
         });
     }
 
@@ -35,6 +34,6 @@ class CreateDataTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('data');
+        Schema::dropIfExists('judgers');
     }
 }

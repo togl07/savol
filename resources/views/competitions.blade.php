@@ -6,13 +6,6 @@
 <h3 style="text-align:center">Yaqinlashib Kelayotgan Musoboqalar Ro'yhati</h3>
 <div class="table-container">
   <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
         .table-container {
             overflow-x: auto;
         }
@@ -56,6 +49,36 @@
             color: #dc3545; /* Red for ended */
         }
     </style>
+    @if(!empty($boshlangan))
+    <h4 >Hozrda Davom etayotgan olimpiadalar</h4>
+    <div class="table-container">
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Olimpiada</th>
+                        <th>Masalalar Soni </th>
+                        <th>Boshlanish Vaqti</th>
+                        <th>end</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($boshlangan as $row)
+                    <tr>
+                        <td><a href="competition/{{$row->uuid}}">{{$row->name}}</a></td>
+                        <td>5</td>
+                        <td>{{$row->start}}</td>
+                        <td>{{$row->end}}</td>
+                        <td style="color: green">O'tkazilmoqda</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+      @endif
+    @if(!empty($boshlanmagan))
+    <h4>Yaqinlashib kelayotgan Musoboqalar</h4>
     <div class="table-container">
             <table>
                 <thead>
@@ -68,55 +91,87 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($boshlanmagan as $row)
                     <tr>
-                        <td><a href="competitions/1">Robocontest Round #99</a></td>
-                        <td>-</td>
-                        <td>25.12.2024 19:30</td>
-                        <td>02:30:00</td>
-                        <td class="status status-upcoming">Boshlanmagan</td>
+                      <td><a href="competition/{{$row->uuid}}">{{$row->name}}</a></td>
+                      <td>5</td>
+                      <td>{{$row->start}}</td>
+                      <td>{{$row->end}}</td>
+                      <td style="color: Blue">Boshlanmagan</td>
                     </tr>
-                    <tr>
-                        <td><a href="#">Happy New Year | Robocontest Round #100</a></td>
-                        <td>-</td>
-                        <td>30.12.2024 19:30</td>
-                        <td>02:30:00</td>
-                        <td class="status status-upcoming">Boshlanmagan</td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
-
-        <h2>Completed</h2>
+        @endif
+        <h4>Tugagan</h4>
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Tasks</th>
-                        <th>Participants</th>
-                        <th>Start Time</th>
-                        <th>Duration</th>
-                        <th>Status</th>
+                        <th>Olimpiada</th>
+                        <th>Masalalar Soni</th>
+                        <th>Qatnashuvchilar soni</th>
+                        <th>Boshlanish Vaqti</th>
+                        <!-- <th>Duration</th> -->
+                        <th>Tugash Vaqti</th>
+                        <th>status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><a href="#">"Eng yaxshi dasturchi" Final bosqich</a></td>
-                        <td>8</td>
-                        <td>179</td>
-                        <td>23.12.2024 19:00</td>
-                        <td>03:00:00</td>
-                        <td class="status status-ended">Ended</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Robocontest Round #98</a></td>
-                        <td>8</td>
-                        <td>1313</td>
-                        <td>11.12.2024 19:30</td>
-                        <td>02:20:00</td>
-                        <td class="status status-ended">Ended</td>
-                    </tr>
+                  <?php $id=1 ?>
+                  @foreach($tugagan as $data)
+                    @if(intval($id/10) === $page-1 || $id%10==$page)
+                      <tr>
+                          <td><a href="/competition/{{$data->uuid}}">{{$data->name}}</a></td>
+                          <td>8</td>
+                          <td>179</td>
+                          <td>{{$data->start}}</td>
+                          <td>{{$data->end}}</td>
+                          <td class="status status-ended">Ended</td>
+                      </tr>
+                    @endif
+                    <?php $id++ ?>
+                  @endforeach
                 </tbody>
             </table>
-        </div><br><br>
+        </div>
+        <br><br>
+        <style>
+        .pagination {
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+            justify-content: center;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination a {
+            text-decoration: none;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+        .pagination .active a {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+    <ul class="pagination">
+        @php
+        if(count($tugagan) % 10 === 0){
+          $len = ceil(count($tugagan) / 10)+1;
+        }
+        else{
+          $len = ceil(count($tugagan) / 10)+1;
+        }
+        @endphp
+        @for($i=1;$i<=$len;$i++)
+          <li><a href="/competitions?page={{$i}}" class="{{'active' ? $i===$page : ''}}">{{$i}}</a></li>
+        @endfor
+    </ul>
 @endsection

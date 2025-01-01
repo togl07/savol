@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html>
 
@@ -54,7 +55,7 @@
                 <a class="nav-link" href="/about">Biz Haqimizda</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/competitions">Olimpiadalar</a>
+                <a class="nav-link" href="/competitions?page=1">Olimpiadalar</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/problems">Masalar bo'limi</a>
@@ -62,15 +63,28 @@
               <li class="nav-item">
                 <a class="nav-link" href="/contact">Bog'lanish</a>
               </li>
+              @if(session('username')!=[] && session('status') === 'headquarter')
+                <li class="nav-item">
+                  <a class="nav-link" href="/headquarter">headquarter</a>
+                </li>
+              @endif
+              @if(session('username') && (session('status') === 'judge' || session('status') === 'headquarter'))
+                <li class="nav-item">
+                  <a class="nav-link" href="/judge">Judge</a>
+                </li>
+              @endif
+
             </ul>
           </div>
           <div class="quote_btn-container">
+            <?php  ?>
+            @if(session('username'))
             <a href="">
-              <span>
-                Kirish
-              </span>
-              <i class="fa fa-sign-in" aria-hidden="true"></i>
+              <a href="profil/{{session('username')}}">{{session('username')}}</a>
             </a>
+            @else
+              <a href="/login">kirish<i class="fa fa-sign-in" aria-hidden="true"></i></a>
+            @endif
           </div>
 
         </div>
